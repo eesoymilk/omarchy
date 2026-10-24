@@ -275,8 +275,11 @@ Item {
   //
   // One clock for the whole deck: each card interpolates from `was` to its
   // placement by t. A Behavior per card would restart on every retarget.
-  readonly property var sceneCurve: [0.21, 1.02, 0.73, 1.0, 1.0, 1.0]
-  readonly property int sceneDuration: Style.duration(320)
+  // A strong ease-out with no overshoot: the cards answer the pointer at once
+  // and settle without a bounce. Closing is quicker than opening, since the
+  // pointer has already moved on.
+  readonly property var sceneCurve: [0.23, 1.0, 0.32, 1.0, 1.0, 1.0]
+  readonly property int sceneDuration: Style.duration(expanded ? 250 : 200)
 
   property real t: 1                 // 0..1, eased, shared by every card
   property var was: ({})             // where each card was when the target moved

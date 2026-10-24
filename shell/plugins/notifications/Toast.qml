@@ -84,7 +84,7 @@ Item {
   // opening and closing the deck fades the text; taking or giving up the
   // front, as cards arrive and leave, is instant.
   property real expandShare: expanded ? 1 : 0
-  Behavior on expandShare { NumberAnimation { duration: card.fade } }
+  Behavior on expandShare { NumberAnimation { duration: card.fade; easing.type: Easing.OutCubic } }
   readonly property real contentOpacity: place.front ? 1 : expandShare
 
   // The body opens in an open deck, or on hover when nothing else is on
@@ -431,7 +431,7 @@ Item {
                 visible: opacity > 0.01
                 font.family: Style.font.family
                 font.pixelSize: Style.font.bodySmall
-                Behavior on opacity { NumberAnimation { duration: card.fade } }
+                Behavior on opacity { NumberAnimation { duration: card.fade; easing.type: Easing.InOutQuad } }
               }
 
               Item {
@@ -444,7 +444,7 @@ Item {
                 opacity: card.hovered ? 1 : 0
                 visible: opacity > 0.01
                 readonly property bool hot: card.pointerOver(shut)
-                Behavior on opacity { NumberAnimation { duration: card.fade } }
+                Behavior on opacity { NumberAnimation { duration: card.fade; easing.type: Easing.InOutQuad } }
 
                 Text {
                   id: closeMark
@@ -527,7 +527,7 @@ Item {
         spacing: Style.space(6)
         opacity: deedArea.shown ? 1 : 0
         visible: opacity > 0.01
-        Behavior on opacity { NumberAnimation { duration: card.fade } }
+        Behavior on opacity { NumberAnimation { duration: card.fade; easing.type: Easing.InOutQuad } }
 
         Repeater {
           model: card.allDeeds.slice().reverse()
