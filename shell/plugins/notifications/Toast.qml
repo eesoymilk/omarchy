@@ -66,6 +66,7 @@ Item {
   signal dismissed()
   signal codeCopied(string code)
   signal actionInvoked(string identifier)
+  signal execInvoked(int index)
 
   readonly property bool critical: row.urgency === 2
   readonly property color dimColor: Qt.darker(Commons.Color.notifications.text, 1.4)
@@ -101,6 +102,9 @@ Item {
     return out
   }
 
+  // Buttons an Omarchy sender asked for (--action), as commands the shell runs.
+  readonly property var execActions: Security.parseExecActions(row.execActions) || []
+
   // What the card found in its own text first, then the sender's actions.
   readonly property var allDeeds: {
     var out = []
@@ -108,6 +112,8 @@ Item {
       out.push({ kind: "code", value: foundCodes[c],
                  label: foundCodes.length > 1 ? I18n.t("notifications.copyThisCode").arg(foundCodes[c])
                                               : I18n.t("notifications.copyCode") })
+    for (var e = 0; e < execActions.length; e++)
+      out.push({ kind: "exec", label: execActions[e].label, value: e })
     for (var i = 0; i < actions.length; i++)
       out.push({ kind: "action", label: String(actions[i].text || ""), value: String(actions[i].id) })
     return out
@@ -118,13 +124,14 @@ Item {
   readonly property var marks: {
     var out = []
     if (String(row.code || "")) out.push("\u{f0306}")
-    if (actions.length > 0) out.push("\u{f0cfd}")
+    if (actions.length > 0 || execActions.length > 0) out.push("\u{f0cfd}")
     return out
   }
 
   function doDeed(deed) {
     var kind = String(deed.kind || "")
     if (kind === "action") { actionInvoked(String(deed.value)); return }
+    if (kind === "exec") { execInvoked(Number(deed.value)); return }
     codeCopied(String(deed.value))
     copiedCode = String(deed.value)
     tick.restart()
