@@ -91,8 +91,7 @@ Item {
     for (var i = 0; i < list.length; i++) {
       var s = list[i]
       out.push({ display: s.modelData ? String(s.modelData.name) : "", mapped: s.visible === true,
-                 stepAside: s.stepAside === true, showing: s.showingNotifications === true,
-                 lingering: s.lingering === true })
+                 stepAside: s.stepAside === true, showing: s.showingNotifications === true })
     }
     return out
   }
@@ -1184,14 +1183,7 @@ Item {
       readonly property var margins: service.marginsFor(String(modelData.name))
       readonly property bool stepAside: service.fullscreenOn(String(modelData.name))
       readonly property bool hasSomethingToShow: showingNotifications && toasts.count > 0
-      // Holds the canvas for the last card's exit animation.
-      property bool lingering: false
-      onHasSomethingToShowChanged: {
-        if (hasSomethingToShow) lingering = false
-        else { lingering = true; lingerTimer.restart() }
-      }
-      Timer { id: lingerTimer; interval: 800; onTriggered: surface.lingering = false }
-      visible: !stepAside || hasSomethingToShow || lingering
+      visible: !stepAside || hasSomethingToShow
       color: "transparent"
 
       WlrLayershell.namespace: "omarchy-notifications"
