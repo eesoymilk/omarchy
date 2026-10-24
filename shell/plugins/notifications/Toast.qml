@@ -59,7 +59,7 @@ Item {
   }
 
   // The card's only duration: crossfades inside its own edges.
-  readonly property int fade: 150
+  readonly property int fade: Style.duration(150)
 
   signal expired()
   signal activated()
