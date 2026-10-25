@@ -71,6 +71,8 @@ assert apps() == ["chromium"], "Inhibit on the Chromium path"
 call(other, "/ScreenSaver", "UnInhibit", GLib.Variant("(u)", (cookie,)))
 call(player, "/ScreenSaver", "Inhibit", GLib.Variant("(ss)", ("firefox", "video")))
 assert apps() == ["chromium", "firefox"], "another client cannot release an inhibit"
+call(player, "/org/freedesktop/ScreenSaver", "UnInhibit", GLib.Variant("(u)", (cookie,)))
+assert apps() == ["firefox"], "the owner releases its inhibit"
 player.close_sync(None)
 assert apps() == [], "a client leaving the bus releases its inhibits"
 helper.stdin.close()
